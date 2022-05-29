@@ -9,6 +9,7 @@ public partial class EditPage : ContentPage
     public EditPage(EditViewModel editViewModel)
     {
         this.BindingContext = this.ViewModel = editViewModel ?? throw new ArgumentNullException(nameof(editViewModel));
-        InitializeComponent();
+
+        this.InitializeComponent();
     }
 }

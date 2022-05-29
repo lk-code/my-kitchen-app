@@ -9,6 +9,7 @@ public partial class OverviewPage : ContentPage
     public OverviewPage(OverviewViewModel overviewViewModel)
     {
         this.BindingContext = this.ViewModel = overviewViewModel ?? throw new ArgumentNullException(nameof(overviewViewModel));
-        InitializeComponent();
+
+        this.InitializeComponent();
     }
 }
