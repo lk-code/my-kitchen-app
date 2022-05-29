@@ -1,7 +1,7 @@
-﻿using LKCode.Helper.Interfaces;
-using Microsoft.AppCenter;
+﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Extensions.Configuration;
 using MyKitchenApp.Interfaces;
 using System.Diagnostics;
 using System.IO.Compression;
@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace MyKitchenApp.Services.Logging
 {
-    public class LoggingService : ILoggingService
+    public class LoggingService : ILoggingService, IInitialize
     {
         #region Konstanten
 
@@ -46,10 +46,9 @@ namespace MyKitchenApp.Services.Logging
 
         public event EventHandler<string> LogMessageReceived;
 
-        private readonly IConfigService _configService;
+        private readonly IConfiguration _configuration;
 
         private readonly string _logFileName;
-
         private bool _isDebug = false;
         private StreamWriter _logStreamWriter = null;
 
@@ -61,14 +60,11 @@ namespace MyKitchenApp.Services.Logging
 
         #region Konstruktoren
 
-        public LoggingService(IConfigService configService)
+        public LoggingService(IConfiguration configuration)
         {
-            this._configService = configService ?? throw new ArgumentNullException(nameof(configService));
+            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             this._logFileName = string.Format(LOG_FILE_NAME, DateTime.Now.ToString("MM-dd-yyyy"));
-
-            this.Initialize();
-
         }
 
         ~LoggingService()
@@ -82,7 +78,7 @@ namespace MyKitchenApp.Services.Logging
 
         #region Worker
 
-        private void Initialize()
+        public void Initialize()
         {
 #if DEBUG
             this._isDebug = true;
@@ -121,9 +117,34 @@ namespace MyKitchenApp.Services.Logging
         /// <returns></returns>
         private string GetAppCenterId()
         {
-            string appSecret = this._configService.Get("AppCenter:Secret");
+            Settings.AppCenter appCenterSettings = this._configuration.GetRequiredSection("AppCenter").Get<Settings.AppCenter>();
 
-            return appSecret;
+            if (!string.IsNullOrEmpty(appCenterSettings.Secret))
+            {
+                return appCenterSettings.Secret;
+            }
+
+            // build appcenter secrets string
+            StringBuilder stringBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(appCenterSettings.UWP))
+            {
+                stringBuilder.AppendFormat("uwp={0};", appCenterSettings.UWP);
+            }
+            if (!string.IsNullOrEmpty(appCenterSettings.iOS))
+            {
+                stringBuilder.AppendFormat("ios={0};", appCenterSettings.iOS);
+            }
+            if (!string.IsNullOrEmpty(appCenterSettings.macOS))
+            {
+                stringBuilder.AppendFormat("macos={0};", appCenterSettings.macOS);
+            }
+            if (!string.IsNullOrEmpty(appCenterSettings.Android))
+            {
+                stringBuilder.AppendFormat("android={0};", appCenterSettings.Android);
+            }
+
+            string appCenterSecret = stringBuilder.ToString();
+            return appCenterSecret;
         }
 
         #endregion

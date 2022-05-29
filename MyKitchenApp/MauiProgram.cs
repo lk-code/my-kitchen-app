@@ -1,5 +1,4 @@
-﻿using LKCode.Helper.Extensions;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using MyKitchenApp.Interfaces;
 using MyKitchenApp.Services.Logging;
 using System.Reflection;
@@ -33,8 +32,17 @@ public static class MauiProgram
     private static MauiApp InitializeAndBuild(this MauiAppBuilder builder)
     {
         List<Type> serviceTypes = new List<Type>();
+
+        // 1. add service types
+        foreach (ServiceDescriptor service in builder.Services)
+        {
+            serviceTypes.Add(service.ServiceType);
+        }
+
+        // 2. build maui app to generate service-instances
         MauiApp mauiApp = builder.Build();
 
+        // 3. execute initialize-methods
         Task initializeTask = Task.Run(async () =>
         {
             foreach (Type serviceType in serviceTypes)
@@ -54,6 +62,7 @@ public static class MauiProgram
         });
         initializeTask.Wait();
 
+        // 4. return maui app instance
         return mauiApp;
     }
 
@@ -74,7 +83,6 @@ public static class MauiProgram
 
     private static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
     {
-        builder.Services.AddLKCodeConfig();
         builder.Services.AddSingleton<ILoggingService, LoggingService>();
 
         return builder;

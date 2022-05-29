@@ -12,10 +12,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>MyKitchenApp</ApplicationTitle>
+		<ApplicationTitle>MyKitchen</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mykitchenapp</ApplicationId>
+		<ApplicationId>de.lkraemer.mykitchenapp</ApplicationId>
 		<ApplicationIdGuid>94B8DEC8-46E2-4587-B0D9-67D4733DD8DE</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -57,7 +57,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="LKCode.Helper" Version="1.2.0.6" />
 	  <PackageReference Include="Microsoft.AppCenter" Version="4.5.1" />
 	  <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.1" />
 	  <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.1" />
@@ -77,5 +76,7 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
