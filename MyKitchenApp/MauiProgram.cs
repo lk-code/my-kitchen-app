@@ -7,6 +7,8 @@ namespace MyKitchenApp;
 
 public static class MauiProgram
 {
+    private static List<Type> _initServiceTypes = new List<Type>();
+
     public static MauiApp CreateMauiApp()
     {
         MauiAppBuilder builder = MauiApp.CreateBuilder();
@@ -33,20 +35,17 @@ public static class MauiProgram
     {
         List<Type> serviceTypes = new List<Type>();
 
-        // 1. add service types
-        foreach (ServiceDescriptor service in builder.Services)
-        {
-            serviceTypes.Add(service.ServiceType);
-        }
-
-        // 2. build maui app to generate service-instances
+        // 1. build maui app to generate service-instances
         MauiApp mauiApp = builder.Build();
 
-        // 3. execute initialize-methods
+        // 2. execute initialize-methods
         Task initializeTask = Task.Run(async () =>
         {
-            foreach (Type serviceType in serviceTypes)
+            string err = string.Empty;
+
+            foreach (Type serviceType in _initServiceTypes)
             {
+                err = serviceType.ToString();
                 object service = mauiApp.Services.GetService(serviceType);
 
                 if (service is IInitializeAsync)
@@ -62,7 +61,7 @@ public static class MauiProgram
         });
         initializeTask.Wait();
 
-        // 4. return maui app instance
+        // 3. return maui app instance
         return mauiApp;
     }
 
@@ -84,6 +83,7 @@ public static class MauiProgram
     private static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
     {
         builder.Services.AddSingleton<ILoggingService, LoggingService>();
+        _initServiceTypes.Add(typeof(ILoggingService));
 
         return builder;
     }
