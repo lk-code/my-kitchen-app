@@ -12,4 +12,11 @@ public partial class OverviewPage : ContentPage
 
         this.InitializeComponent();
     }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        this.ViewModel.InitializeCommand.Execute(null);
+    }
 }

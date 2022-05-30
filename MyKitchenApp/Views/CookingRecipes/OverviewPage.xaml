@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+             xmlns:vm="clr-namespace:MyKitchenApp.ViewModel.CookingRecipes"
+             xmlns:models="clr-namespace:MyKitchenApp.Models.CookingRecipes"
              x:Class="MyKitchenApp.Views.CookingRecipes.OverviewPage"
+             x:DataType="vm:OverviewViewModel"
              Title="Rezepte">
-    <StackLayout>
-        <Label Text="Welcome to .NET MAUI!"
-               VerticalOptions="Center"
-               HorizontalOptions="Center" />
-    </StackLayout>
+
+    <ListView ItemsSource="{Binding Recipes, Mode=TwoWay}">
+
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="models:Recipe">
+                <ViewCell>
+                    <Label Text="{Binding Title, Mode=OneWay}" />
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+
+    </ListView>
+
 </ContentPage>

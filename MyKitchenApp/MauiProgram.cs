@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MyKitchenApp.Interfaces;
+using MyKitchenApp.Services.CookingRecipes;
 using MyKitchenApp.Services.Logging;
+using MyKitchenApp.Services.Shopping;
 using System.Reflection;
 
 namespace MyKitchenApp;
@@ -79,6 +81,12 @@ public static class MauiProgram
     {
         builder.Services.AddSingleton<ILoggingService, LoggingService>();
         _initServiceTypes.Add(typeof(ILoggingService));
+
+        builder.Services.AddSingleton<IShoppingService, ShoppingService>();
+        _initServiceTypes.Add(typeof(IShoppingService));
+
+        builder.Services.AddSingleton<ICookingRecipesService, CookingRecipesService>();
+        _initServiceTypes.Add(typeof(ICookingRecipesService));
 
         return builder;
     }

@@ -5,13 +5,13 @@ namespace MyKitchenApp.ViewModel
 {
     public class ViewModelBase : ObservableObject
     {
-        #region Properties
+        #region properties
 
         protected readonly ILoggingService _loggingService;
 
         #endregion
 
-        #region Konstruktoren
+        #region constructor
 
         public ViewModelBase()
         {
@@ -27,7 +27,7 @@ namespace MyKitchenApp.ViewModel
 
         #endregion
 
-        #region Worker
+        #region logic
 
         protected virtual void LoadDesignerInstance()
         {
