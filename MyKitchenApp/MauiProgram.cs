@@ -33,19 +33,14 @@ public static class MauiProgram
 
     private static MauiApp InitializeAndBuild(this MauiAppBuilder builder)
     {
-        List<Type> serviceTypes = new List<Type>();
-
         // 1. build maui app to generate service-instances
         MauiApp mauiApp = builder.Build();
 
         // 2. execute initialize-methods
         Task initializeTask = Task.Run(async () =>
         {
-            string err = string.Empty;
-
             foreach (Type serviceType in _initServiceTypes)
             {
-                err = serviceType.ToString();
                 object service = mauiApp.Services.GetService(serviceType);
 
                 if (service is IInitializeAsync)
